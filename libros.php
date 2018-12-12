@@ -46,10 +46,12 @@ $totalLibros = mysql_num_rows($resQueryGetLibros);
                   <p class="card-text"><?php echo $libroDetail['descripcion'];?></p>
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">
-                      <button type="button" class="btn btn-sm btn-outline-secondary">Ver</button>
+                      <button type="button" class="btn btn-sm btn-outline-secondary">
+                      <a href="libro.php?libroId=<?php echo $libroDetail['id'];?>">Ver</a>
+                      </button>
                       <button type="button" class="btn btn-sm btn-outline-secondary">Comprar</button>
                     </div>
-                    <small class="text-muted">9 mins</small>
+                    <small class="text-muted"><?php echo $libroDetail['tipoProducto'];?></small>
                   </div>
                 </div>
               </div>
