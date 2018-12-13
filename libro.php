@@ -4,9 +4,10 @@ if(!isset($_SESSION)){
 }
 include("conexiones/conexionLocalhost.php");
 include("includes/codigoComun.php");
+$queryGetUserDetails = "SELECT * FROM tbllibros Where id = ".$_GET['libroId']."";
+$resQueryGetUserDetails = mysql_query($queryGetUserDetails, $conexionLocalhost) or die("No se pudo ejecutar el query para obtener los datos del usuario");
+$libroDetails = mysql_fetch_assoc($resQueryGetUserDetails);
 ?>
-
-
 
 <!DOCTYPE html>
 <html>
@@ -36,43 +37,36 @@ include("includes/codigoComun.php");
         <div class="col-md-1">
         </div>
         <aside class="col-md-3 blog-sidebar bg-light d-flex justify-content-center">
-          <?php
-
-        
-            
-            echo
-            "<img class=\"card-img-right flex-auto d-none d-lg-block\" 
-            src=\"https://www.planetadelibros.com.mx/usuaris/libros/fotos/209/m_libros/208496_portada_el-libro-negro-del-vaticano_eric-frattini_201511201135.jpg\" 
-            alt=\"Sin Imagen [200x250]\" 
-            style=\"width: 200px; height: 250px;\" 
-            
-            >";
-            
-            ?>
+            <img class="card-img-right flex-auto d-none d-lg-block" 
+            src="<?php echo $libroDetails['img'];?>" 
+            alt="Sin Imagen [200x250]" 
+            style="width: 200px; height: 250px;" 
+            >
+          <?php;?>
         </aside>
         <div class="col-md-6 blog-main">
             <h4 class="mb-1 light-text-color">Titulo del Libro:</h4>
-              <h4 class="mb-4 border-bottom font-casual"><?php echo "Nombre del Libro"?></h4>
+              <h4 class="mb-4 border-bottom font-casual"><?php echo $libroDetails['titulo'];?></h4>
             <h4 class="mb-1 light-text-color">Autor:</h4>
-              <h4 class="mb-4 border-bottom font-casual"><?php echo "Gautier H."?></h4>
+              <h4 class="mb-4 border-bottom font-casual"><?php echo $libroDetails['autor'];?></h4>
             <h4 class="mb-1 light-text-color">Fecha:</h4>
-              <h4 class="mb-4 border-bottom font-casual"><?php echo "13/12/2018"?></h4>
+              <h4 class="mb-4 border-bottom font-casual"><?php echo $libroDetails['fechaPublicacion'];?></h4>
             <h4 class="mb-1 light-text-color">Editorial:</h4>
-              <h4 class="mb-4 border-bottom font-casual"><?php echo "Trillas"?></h4>
+              <h4 class="mb-4 border-bottom font-casual"><?php echo $libroDetails['editorial'];?></h4>
             <h4 class="mb-1 light-text-color">Descripcion:</h4>
-              <h4 class="mb-4 border-bottom font-casual"><?php echo "Un libro chido que habla acer de la historia del vatica"?></h4>
+              <h4 class="mb-4 border-bottom font-casual"><?php echo $libroDetails['descripcion'];?></h4>
             <h4 class="mb-1 light-text-color">Tipo:</h4>
-              <h4 class="mb-4 border-bottom font-casual"><?php echo "Historia"?></h4>
+              <h4 class="mb-4 border-bottom font-casual"><?php echo $libroDetails['tipoProducto'];?></h4>
             <h4 class="mb-1 light-text-color">Cantidad:</h4>
-              <h4 class="mb-4 border-bottom font-casual"><?php echo "100"?></h4>
+              <h4 class="mb-4 border-bottom font-casual"><?php echo $libroDetails['cantidad'];?></h4>
             <h4 class="mb-1 light-text-color">Precio:</h4>
-              <h4 class="mb-4 border-bottom font-casual"><?php echo "329$"?></h4>  
+              <h4 class="mb-4 border-bottom font-casual"><?php echo $libroDetails['precio']."$";?></h4>  
 
         </div>
     </div>
     <div class="mt-2 mb-4 row">
           <div class="col-10 d-flex justify-content-end align-items-center">
-            <a class="btn btn-sm btn-outline-secondary" href="?logout=true">Comprar</a>
+            <a class="btn btn-sm btn-outline-secondary" href="add_venta.php?libroId=<?php echo $libroDetails['id'];?>">Comprar</a>
           </div>
     </div>
 </div>

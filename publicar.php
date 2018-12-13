@@ -19,6 +19,7 @@ include("includes/codigoComun.php");
     <link href="css/signin.css" rel="stylesheet">
     <link href="css/blog.css" rel="stylesheet">
     <link href="css/carousel.css" rel="stylesheet">
+    <link href="css/hover.css" rel="stylesheet">
 </head>
 
 <body>
@@ -35,47 +36,47 @@ include("includes/codigoComun.php");
 ?>
 <div class="container">
   <div class="row">
-            <div class="col-md-4">
-              <div class="card mb-4 shadow-sm">
-                <img class="card-img-top" alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;" src="http://lapiedradesisifo.com/wp-content/uploads/2015/11/libro_abierto.jpg" data-holder-rendered="true">
+            <div class="col-md-4 hvr-float">
+              <div class="card mb-4 bg-light shadow-sm">
+                <img class="card-img-top" alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;" src="images/publicar.jpg" data-holder-rendered="true">
                 <div class="card-body">
-                  <h4 class="card-text">Añadir un Libro</h4>
-                  <p class="card-text">Los usuarios registrados como autores pueden utilizar este espacio para publicar un libro de manera independiente.</p>
+                  <h4 class="card-text">Publicar un Libro</h4>
+                  <p class="card-text">Los usuarios registrados pueden utilizar este espacio para publicar un libro en venta para otro usuarios.</p>
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">
                       <button type="button" class="btn btn-sm btn-outline-secondary"><a href="add_libro.php">Publicar</a></button>
                     </div>
-                    <small class="text-muted">Solo autores</small>
+                    <small class="text-muted">Libros</small>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="card mb-4 shadow-sm">
-                <img class="card-img-top" alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;" src="http://lapiedradesisifo.com/wp-content/uploads/2015/11/libro_abierto.jpg" data-holder-rendered="true">
+            <div class="col-md-4 hvr-sink">
+              <div class="card mb-4 bg-light shadow-sm">
+                <img class="card-img-top" alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;" src="images/buscar.jpg" data-holder-rendered="true">
                 <div class="card-body">
-                  <h4 class="card-text">Añadir un Libro</h4>
-                  <p class="card-text">Los usuarios registrados como editoriales pueden utilizar este espacio para publicar un libro acreditando al respectivo autor.</p>
+                  <h4 class="card-text">Buscar un Libro</h4>
+                  <p class="card-text">Realiza una busqueda personalizada a traves de nuestros catalogos disponibles y articulos en existencia.</p>
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">
-                      <button type="button" class="btn btn-sm btn-outline-secondary">Publicar</button>
+                      <button type="button" class="btn btn-sm btn-outline-secondary"><a href="search.php">Buscar</a></button>
                     </div>
-                    <small class="text-muted">Solo editoriales</small>
+                    <small class="text-muted">Busqueda</small>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="card mb-4 shadow-sm">
-                <img class="card-img-top" alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;" src="http://lapiedradesisifo.com/wp-content/uploads/2015/11/libro_abierto.jpg" data-holder-rendered="true">
+            <div class="col-md-4 hvr-float">
+              <div class="card mb-4 bg-light shadow-sm">
+                <img class="card-img-top" alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;" src="images/paper.jpg" data-holder-rendered="true">
                 <div class="card-body">
-                  <h4 class="card-text">Publicar un articulo</h4>
-                  <p class="card-text">Los usuarios registrados como autores pueden utilizar este espacio para publicar un libro de manera independiente.</p>
+                  <h4 class="card-text">Publicar un Articulo</h4>
+                  <p class="card-text">Los usuarios registrados pueden escribir un articulo para iniciar un foro de discusion.</p>
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">
-                      <button type="button" class="btn btn-sm btn-outline-secondary">Publicar</button>
+                      <button type="button" class="btn btn-sm btn-outline-secondary"><a href="add_articulo.php">Publicar</a></button>
                     </div>
-                    <small class="text-muted">Todos los usuarios</small>
+                    <small class="text-muted">Foros</small>
                   </div>
                 </div>
               </div>

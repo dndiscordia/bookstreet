@@ -46,3 +46,6 @@ body {
   border-radius: 5px;
   font-family: "Playfair Display", Georgia, "Times New Roman", serif;
 }
+.form-fix {
+  max-width: 500px;
+}

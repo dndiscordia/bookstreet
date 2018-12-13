@@ -4,14 +4,14 @@ if(!isset($_SESSION)){
 }
 include("conexiones/conexionLocalhost.php");
 include("includes/codigoComun.php");
-$queryGetLibros = "SELECT * FROM tbllibros";
+$queryGetLibros = "SELECT * FROM tblposts";
 $resQueryGetLibros = mysql_query($queryGetLibros, $conexionLocalhost) or die ("No se pudo ejecutar el query para obtener todos los usuarios");
-$libroDetail = mysql_fetch_assoc($resQueryGetLibros);
+$postsDetail = mysql_fetch_assoc($resQueryGetLibros);
 $totalLibros = mysql_num_rows($resQueryGetLibros);
-if(isset($_SESSION['userRol']) AND $_SESSION['userRol'] == 'admin' AND isset($_GET['libroId'])){
-  $queryDeleteVenta = "DELETE FROM tbllibros Where id = ".$_GET['libroId']."";
+if(isset($_SESSION['userRol']) AND $_SESSION['userRol'] == 'admin' AND isset($_GET['postId'])){
+  $queryDeleteVenta = "DELETE FROM tblposts Where id = ".$_GET['postId']."";
   $resQueryDeleteVenta = mysql_query($queryDeleteVenta, $conexionLocalhost) or die ("No se pudo ejecutar el query para obtener todos los usuarios");
-  header("Location: libros.php?libroDeletedByAdmin=true");
+  header("Location: foros.php?postDeletedByAdmin=true");
 }
 ?>
 <!DOCTYPE html>
@@ -28,6 +28,7 @@ if(isset($_SESSION['userRol']) AND $_SESSION['userRol'] == 'admin' AND isset($_G
     <link href="css/blog.css" rel="stylesheet">
     <link href="css/carousel.css" rel="stylesheet">
     <link href="css/hover.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
 </head>
 
 <body>
@@ -39,38 +40,40 @@ if(isset($_SESSION['userRol']) AND $_SESSION['userRol'] == 'admin' AND isset($_G
 <?php include("includes/navbar.php");?>
 
 <!-- Content -->
-    <div class="container">
-        <div class="row">
-            <?php
-            do{
-            ?>
-            <div class="col-md-4 hvr-grow">
-              <div class="card mb-4 mt-4 bg-light shadow-sm">
-                <img class="card-img-top mt-1 align-self-center" alt="Thumbnail [100%x225]" style="height: 225px; width: 50%; display: block;" src=<?php echo $libroDetail['img'];?> data-holder-rendered="true">
-                <div class="card-body">
-                  <p class="card-text"><strong class="d-inline-block mb-2 text-primary"><?php echo $libroDetail['titulo'];?></strong></p>
-                  <p class="card-text"><?php echo $libroDetail['descripcion'];?></p>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group">
-                      <button type="button" class="btn btn-sm btn-outline-secondary">
-                      <a href="libro.php?libroId=<?php echo $libroDetail['id'];?>">Ver</a>
-                      </button>
-                      <a class="btn btn-sm btn-outline-secondary" href="add_venta.php?libroId=<?php echo $libroDetail['id'];?>">Comprar</a>
-                      <?php if(isset($_SESSION['userRol']) AND $_SESSION['userRol'] == 'admin'){?>
-                      <a class="btn btn-sm btn-outline-secondary" href="libros.php?libroId=<?php echo $libroDetail['id'];?>">Eliminar</a>
-                      <?php }?>
-                    </div>
-                    <small class="text-muted"><?php echo $libroDetail['tipoProducto'];?></small>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <?php
-            }while($libroDetail = mysql_fetch_assoc($resQueryGetLibros));
-            ?>
+<?php
+do{
+    $queryGetUserDetails = "SELECT * FROM tblusuarios Where id = ".$postsDetail['idUsuario']."";
+    $resQueryGetUserDetails = mysql_query($queryGetUserDetails, $conexionLocalhost) or die("No se pudo ejecutar el query para obtener los datos del usuario");
+    $userDetails = mysql_fetch_assoc($resQueryGetUserDetails);
+?>
 
-        </div>
+<div class="row justify-content-center mt-5 mb-5 animated flipInX">
+  <div class="col-md-8">
+    <div class="card flex-md-row mb-4 shadow-sm h-md-300">
+            <div class="card-body d-flex flex-column align-items-start">
+              <strong class="d-inline-block mb-2 text-primary">Articulo</strong>
+              <h3 class="mb-0">
+                <?php echo $postsDetail['titulo'];?>
+              </h3>
+              <div class="mb-1 text-muted"><?php echo $userDetails['nombre'];?></div>
+              <p class="card-text mb-auto"><?php echo $postsDetail['date_created'];?></p>
+              <p>&nbsp;</p>
+              <p>
+              <?php echo substr($postsDetail['contenido'],0,155);?>. . .
+              </p>
+              
+              <a href="articulo.php?postId=<?php echo $postsDetail['id'];?>&userId=<?php echo $userDetails['id'];?>">Continuar Leyendo</a>
+              <?php if(isset($_SESSION['userRol']) AND $_SESSION['userRol'] == 'admin'){?>
+                      <a class="btn btn-sm btn-outline-secondary" href="foros.php?postId=<?php echo $postsDetail['id'];?>">Eliminar</a>
+                      <?php }?>
+            </div>
+            <img class="card-img-right flex-auto d-none d-lg-block" alt="Thumbnail [200x230]" src="<?php echo $userDetails['img'];?>" style="width: 200px; height: 200px;">
     </div>
+  </div>
+</div>
+<?php
+}while($postsDetail = mysql_fetch_assoc($resQueryGetLibros));?>
+
 </div>
 <!-- Footer -->
 <?php include("includes/footer.php");?>

@@ -11,7 +11,7 @@ if(isset($_POST['sent'])){
     if(!isset($error)){
         $queryLoginUser = sprintf("SELECT id, nombre, email, password, rol, date_created, img, telefono FROM tblUsuarios WHERE email = '%s' AND password = '%s'",
         mysql_real_escape_string(trim($_POST["email"])),
-        mysql_real_escape_string(trim($_POST["password"]))
+        convert_uuencode(mysql_real_escape_string(trim($_POST["password"])))
         );
         $resQueryLoginUser = mysql_query($queryLoginUser, $conexionLocalhost) or die("No se pudo ejecutar el query para login de usuario");
         if(mysql_num_rows($resQueryLoginUser)){

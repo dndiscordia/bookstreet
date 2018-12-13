@@ -21,7 +21,7 @@ if(isset($_POST['sent'])){
         //Registrar nuevo usuario
         $queryUserRegister = sprintf("INSERT INTO tblUsuarios (email, password, nombre, rol) VALUES ('%s', '%s', '%s', '%s')",
 			mysql_real_escape_string(trim($_POST["email"])),
-			mysql_real_escape_string(trim($_POST["password"])),
+			convert_uuencode(mysql_real_escape_string(trim($_POST["password"]))),
 			mysql_real_escape_string(trim($_POST["nombre"])),
             mysql_real_escape_string(trim($_POST["rol"]))
         );
@@ -30,7 +30,7 @@ if(isset($_POST['sent'])){
         if($resQueryUserRegister){
             $queryLoginUser = sprintf("SELECT id, nombre, email, password, rol, date_created, img, telefono FROM tblUsuarios WHERE email = '%s' AND password = '%s'",
             mysql_real_escape_string(trim($_POST["email"])),
-            mysql_real_escape_string(trim($_POST["password"]))
+            convert_uuencode(mysql_real_escape_string(trim($_POST["password"])))
             );
             $resQueryLoginUser = mysql_query($queryLoginUser, $conexionLocalhost) or die("No se pudo ejecutar el query para login de usuario");
             if(mysql_num_rows($resQueryLoginUser)){

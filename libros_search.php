@@ -4,15 +4,17 @@ if(!isset($_SESSION)){
 }
 include("conexiones/conexionLocalhost.php");
 include("includes/codigoComun.php");
-$queryGetLibros = "SELECT * FROM tbllibros";
-$resQueryGetLibros = mysql_query($queryGetLibros, $conexionLocalhost) or die ("No se pudo ejecutar el query para obtener todos los usuarios");
-$libroDetail = mysql_fetch_assoc($resQueryGetLibros);
-$totalLibros = mysql_num_rows($resQueryGetLibros);
-if(isset($_SESSION['userRol']) AND $_SESSION['userRol'] == 'admin' AND isset($_GET['libroId'])){
-  $queryDeleteVenta = "DELETE FROM tbllibros Where id = ".$_GET['libroId']."";
-  $resQueryDeleteVenta = mysql_query($queryDeleteVenta, $conexionLocalhost) or die ("No se pudo ejecutar el query para obtener todos los usuarios");
-  header("Location: libros.php?libroDeletedByAdmin=true");
-}
+if(isset($_GET['libroSearch'])){
+    //Obtenemos todos los usuarios
+    $search = "%".mysql_real_escape_string(trim($_GET['libroSearch']))."%";
+    $queryGetUsers = "SELECT * FROM tbllibros WHERE titulo LIKE '$search' OR autor LIKE '$search'";
+    $resQueryGetUser = mysql_query($queryGetUsers, $conexionLocalhost) or die ("No se pudo ejecutar el query para obtener todos los usuarios");
+    $libroDetail = mysql_fetch_assoc($resQueryGetUser);
+    //Contamos el total de suarios encontrados
+    $totalLibros = mysql_num_rows($resQueryGetUser);
+    }else{
+        header("Location: search.php?invalidSearch=true");
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -42,6 +44,7 @@ if(isset($_SESSION['userRol']) AND $_SESSION['userRol'] == 'admin' AND isset($_G
     <div class="container">
         <div class="row">
             <?php
+            if($totalLibros!=0){
             do{
             ?>
             <div class="col-md-4 hvr-grow">
@@ -56,9 +59,6 @@ if(isset($_SESSION['userRol']) AND $_SESSION['userRol'] == 'admin' AND isset($_G
                       <a href="libro.php?libroId=<?php echo $libroDetail['id'];?>">Ver</a>
                       </button>
                       <a class="btn btn-sm btn-outline-secondary" href="add_venta.php?libroId=<?php echo $libroDetail['id'];?>">Comprar</a>
-                      <?php if(isset($_SESSION['userRol']) AND $_SESSION['userRol'] == 'admin'){?>
-                      <a class="btn btn-sm btn-outline-secondary" href="libros.php?libroId=<?php echo $libroDetail['id'];?>">Eliminar</a>
-                      <?php }?>
                     </div>
                     <small class="text-muted"><?php echo $libroDetail['tipoProducto'];?></small>
                   </div>
@@ -66,14 +66,20 @@ if(isset($_SESSION['userRol']) AND $_SESSION['userRol'] == 'admin' AND isset($_G
               </div>
             </div>
             <?php
-            }while($libroDetail = mysql_fetch_assoc($resQueryGetLibros));
+            }while($libroDetail = mysql_fetch_assoc($resQueryGetUser));
+        }else{
+            
+        }
             ?>
 
         </div>
     </div>
 </div>
 <!-- Footer -->
-<?php include("includes/footer.php");?>
+
+<?php if($totalLibros!=0){
+include("includes/footer.php");
+} ?>
 
 <!--Script -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

@@ -21,6 +21,7 @@ if(!isset($_SESSION['userId'])){
     <link href="css/signin.css" rel="stylesheet">
     <link href="css/blog.css" rel="stylesheet">
     <link href="css/carousel.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
 </head>
 
 <body>
@@ -35,7 +36,7 @@ if(!isset($_SESSION['userId'])){
     <div class="mt-5 row">
         <div class="col-md-1">
         </div>
-        <aside class="col-md-3 blog-sidebar bg-light d-flex justify-content-center">
+        <aside class="col-md-3 blog-sidebar bg-light d-flex justify-content-center animated fadeInLeft">
             <?php
             if(!isset($_SESSION["userImagen"])){
             echo
@@ -56,7 +57,7 @@ if(!isset($_SESSION['userId'])){
             }
             ?>
         </aside>
-        <div class="col-md-6 blog-main">
+        <div class="col-md-6 blog-main animated fadeInRight">
             <h4 class="mb-1 light-text-color">Nombre de Usuario:</h4>
               <h4 class="mb-4 border-bottom font-casual"><?php echo $_SESSION['userNombre']?></h4>
             <h4 class="mb-1 light-text-color">Correo Electronico:</h4>
@@ -71,7 +72,7 @@ if(!isset($_SESSION['userId'])){
     </div>
     <div class="mt-2 mb-4 row">
           <div class="col-10 d-flex justify-content-end align-items-center">
-            <a class="btn btn-sm btn-outline-secondary" href="?logout=true">Editar perfil</a>
+            <a class="btn btn-sm btn-outline-secondary" href="user_edit.php">Editar perfil</a>
           </div>
     </div>
 </div>

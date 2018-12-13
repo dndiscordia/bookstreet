@@ -1,37 +1,20 @@
 <?php
 if(!isset($_SESSION)){
     session_start();
-    if(!isset($_SESSION["userEmail"])){
-		header("Location: login.php?invalidAccess=true");
-	}
 }
 include("conexiones/conexionLocalhost.php");
 include("includes/codigoComun.php");
-
-$queryGetUserDetails = "SELECT * FROM tblusuarios Where id = ".$_SESSION['userId']."";
-$resQueryGetUserDetails = mysql_query($queryGetUserDetails, $conexionLocalhost) or die("No se pudo ejecutar el query para obtener los datos del usuario");
-$userDetails = mysql_fetch_assoc($resQueryGetUserDetails);
-
-if(isset($_POST['sent'])){
-    foreach($_POST as $datosUsuario => $valor){
-		  if($valor == "") { $error[] = "Error en el campo $datosUsuario"; }	
-    }
-    if(!isset($error)){
-      $queryUserUpdate = sprintf("UPDATE tblusuarios SET nombre = '%s', password = '%s', telefono = '%s', img  = '%s' Where id = '%d'",
-      mysql_real_escape_string(trim($_POST['nombre'])),
-      convert_uuencode(mysql_real_escape_string(trim($_POST["password"]))),
-			mysql_real_escape_string(trim($_POST["telefono"])),
-			mysql_real_escape_string(trim($_POST["imagen"])),
-			mysql_real_escape_string(trim($_POST["id"]))
-      );
-      $resQueryUserUpdate = mysql_query($queryUserUpdate, $conexionLocalhost) or die("No se pudo guardar el usuario en la BD.");
-
-      header("Location: index.php?editadoExitoso=true");
-    }else{
-      header("Location: user_edit.php?error=true");
-    }
+if(!isset($_GET['userId'])){
+    header("Location: index.php?unkwownRoute=0");
 }
-
+$queryGetPostDetails = "SELECT * FROM tblusuarios Where id = ".$_GET['userId']."";
+$resQueryGetPostDetails = mysql_query($queryGetPostDetails, $conexionLocalhost) or die("No se pudo ejecutar el query para obtener los datos del usuario");
+$userDetails = mysql_fetch_assoc($resQueryGetPostDetails);
+if(isset($_SESSION['userRol']) AND $_SESSION['userRol'] == 'admin' AND isset($_GET['userId']) AND isset($_GET['deleteUser'])){
+    $queryDeleteVenta = "DELETE FROM tblusuarios Where id = ".$_GET['userId']."";
+    $resQueryDeleteVenta = mysql_query($queryDeleteVenta, $conexionLocalhost) or die ("No se pudo ejecutar el query para obtener todos los usuarios");
+    header("Location: index.php?userDeletedByAdmin=true");
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -46,6 +29,7 @@ if(isset($_POST['sent'])){
     <link href="css/signin.css" rel="stylesheet">
     <link href="css/blog.css" rel="stylesheet">
     <link href="css/carousel.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
 </head>
 
 <body>
@@ -57,34 +41,53 @@ if(isset($_POST['sent'])){
 <?php include("includes/navbar.php");?>
 
 <!-- Content -->
-<form action="user_edit.php" method="post">
-<div class="mt-5 row">
-        <div class="col-md-3">
+    <div class="mt-5 row">
+        <div class="col-md-1">
         </div>
-        <div class="col-md-6 blog-main">
+        <aside class="col-md-3 blog-sidebar bg-light d-flex justify-content-center animated fadeInLeft">
+            <?php
+            if(!isset($userDetails["img"])){
+            echo
+            "<img class=\"card-img-right flex-auto d-none d-lg-block\" 
+            data-src=\"holder.js/200x250?theme=thumb\" 
+            alt=\"Sin Imagen [200x250]\" 
+            style=\"width: 200px; height: 250px;\" 
+            
+            data-holder-rendered=\"true\">";
+            }else{
+            echo
+            "<img class=\"card-img-right flex-auto d-none d-lg-block mt-4\" 
+            data-src=\"holder.js/200x250?theme=thumb\" 
+            alt=\"Sin Imagen [200x250]\" 
+            style=\"width: 200px; height: 200px;\" 
+            src=".$userDetails['img']." 
+            data-holder-rendered=\"true\">";
+            }
+            ?>
+        </aside>
+        <div class="col-md-6 blog-main animated fadeInRight">
             <h4 class="mb-1 light-text-color">Nombre de Usuario:</h4>
-            <input class="mb-4" type="text" name="nombre" value="<?php echo $userDetails['nombre']; ?>"/>
+              <h4 class="mb-4 border-bottom font-casual"><?php echo $userDetails['nombre'];?></h4>
             <h4 class="mb-1 light-text-color">Correo Electronico:</h4>
               <h4 class="mb-4 border-bottom font-casual"><?php echo $userDetails['email'];?></h4>
             <h4 class="mb-1 light-text-color">Telefono:</h4>
-            <input class="mb-4" type="text" name="telefono" value="<?php echo $userDetails['telefono']; ?>"/>
-            <h4 class="mb-1 light-text-color">Imagen (URL):</h4>
-            <input class="mb-4" type="text" name="imagen" value="<?php echo $userDetails['img']; ?>"/>
-            <h4 class="mb-1 light-text-color">Contraseña:</h4>
-            <input class="mb-4" type="text" name="password"/>
-            <h4 class="mb-1 light-text-color">Tipo de Usuario:</h4>
+              <h4 class="mb-4 border-bottom font-casual"><?php echo $userDetails['telefono'];?></h4>
+            <h4 class="mb-1 light-text-color">Rol del Usuario:</h4>
               <h4 class="mb-4 border-bottom font-casual"><?php echo $userDetails['rol'];?></h4>
             <h4 class="mb-1 light-text-color">Fecha de Registro:</h4>
               <h4 class="mb-4 border-bottom font-casual"><?php echo $userDetails['date_created'];?></h4>
-              <input type="hidden" name="id" value="<?php echo $userDetails['id']; ?>">
         </div>
     </div>
+    <?php if(isset($_SESSION['userRol']) AND $_SESSION['userRol'] == 'admin'){?>
     <div class="mt-2 mb-4 row">
           <div class="col-10 d-flex justify-content-end align-items-center">
-          <input type="submit" value="Actualizar usuario" name="sent" />
+          
+                      <a class="btn btn-sm btn-outline-secondary" href="view_perfil.php?userId=<?php echo $userDetails['id'];?>&deleteUser=true">Eliminar</a>
+                      
           </div>
     </div>
-</form>
+    <?php }?>
+
 </div>
 <!-- Footer -->
 <?php include("includes/footer.php");?>

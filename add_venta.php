@@ -9,7 +9,33 @@ $queryGetUserDetails = sprintf("SELECT * FROM tbllibros Where id = '%s'",
      mysql_real_escape_string(trim($_GET['libroId'])));
 $resQueryGetUserDetails = mysql_query($queryGetUserDetails, $conexionLocalhost) or die("No se pudo ejecutar el query para obtener los datos del usuario");
 $libroDetails = mysql_fetch_assoc($resQueryGetUserDetails);
+if(isset($_POST['sent'])){
+  if(!is_numeric($_POST['cantidad'])) { $error[] = "Cantidad Invalida"; }
+  if(!isset($error)){
+    $total = $_POST['cantidad']*$libroDetails['precio'];
+    $queryUserRegister = sprintf("INSERT INTO tblventa (idUsuario, idLibro, cantidad, total, finalizada) 
+    VALUES ('%d', '%d', '%d', '%d', 0)",
+			$_SESSION['userId'],
+			$libroDetails['id'],
+			mysql_real_escape_string(trim($_POST["cantidad"])),
+      $total
+      );
+      $resQueryUserRegister = mysql_query($queryUserRegister, $conexionLocalhost) or die("No se pudo guardar el usuario en la BD... Revisa tu codigo plomo.");
+      if(mysql_num_rows($resQueryUserRegister)){
+        $ventaData = mysql_fetch_assoc($resQueryUserRegister);
+      }
 
+    $queryCarritoRegister = sprintf("INSERT INTO tblcarritos (idUsuario, idVenta) 
+      VALUES ('%d', '%d')",
+        $ventaData['idUsuario'],
+        $ventaData['idLibro']
+      );
+    $resQueryCarritoRegister = mysql_query($queryCarritoRegister, $conexionLocalhost) or die("No se pudo guardar el usuario en la BD... Revisa tu codigo plomo.");
+    header("Location: carrito.php");
+  }else{
+    header("Location: add_venta.php?libroId=".$libroDetails['id']."");
+  }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -35,11 +61,12 @@ $libroDetails = mysql_fetch_assoc($resQueryGetUserDetails);
 <?php include("includes/navbar.php");?>
 
 <!-- Content -->
+<form action="add_venta.php?libroId=<?php echo $libroDetails['id'];?>" method="post">
 <div class="row justify-content-center mt-5 mb-5">
   <div class="col-md-8">
     <div class="card flex-md-row mb-4 shadow-sm h-md-300">
             <div class="card-body d-flex flex-column align-items-start">
-              <strong class="d-inline-block mb-2 text-primary">Confirmar venta</strong>
+              <strong class="d-inline-block mb-2 text-primary">Confirmar compra</strong>
               <h3 class="mb-0">
                 <?php echo $libroDetails['titulo'];?>
               </h3>
@@ -50,13 +77,13 @@ $libroDetails = mysql_fetch_assoc($resQueryGetUserDetails);
               <p>
               <strong class="d-inline-block mb-2 text-success">Precio: <?php echo $libroDetails['precio'];?></strong>    
               </p>
-              <a href="#">Enviar al carrito</a>
+              <input type="submit" name="sent" value="Enviar al carrito"></input>
             </div>
-            <img class="card-img-right flex-auto d-none d-lg-block" alt="Thumbnail [200x230]" src="" style="width: 200px; height: 300px;">
+            <img class="card-img-right flex-auto d-none d-lg-block" alt="Thumbnail [200x230]" src="<?php echo $libroDetails['img'];?>" style="width: 200px; height: 300px;">
     </div>
   </div>
 </div>
-
+</form>
 </div>
 <!-- Footer -->
 <?php include("includes/footer.php");?>
